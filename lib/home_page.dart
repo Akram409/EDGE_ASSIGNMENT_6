@@ -1,6 +1,8 @@
 import 'package:assignment_six/components/dashboard/all_student_data/all_student_data.dart';
+import 'package:assignment_six/components/dashboard/new_student/new_student.dart';
 import 'package:assignment_six/components/dashboard/profile/profile.dart';
-
+import 'package:assignment_six/sql_database_dir/crud/add_student.dart';
+import 'package:assignment_six/sql_database_dir/crud/update_student.dart';
 import 'package:assignment_six/sql_database_dir/model/student_model.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
@@ -163,8 +165,9 @@ class _HomePageState extends State<HomePage> {
           children: [
             Text("Dashboard",
                 style: TextStyle(fontSize: pageMenuTextSize, fontWeight: FontWeight.bold)),
+            Divider(),
             SizedBox(
-              height: 25,
+              height: 10,
             ),
             Expanded(
                 child: GridView.count(
@@ -186,7 +189,7 @@ class _HomePageState extends State<HomePage> {
                     color: Colors.blue,
                     text: "New Student",
                     onTap: () {
-                      Get.to(AllStudentData());
+                      Get.to(NewStudent());
                     },
                     context: context,
                   ),

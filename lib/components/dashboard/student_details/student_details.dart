@@ -28,6 +28,10 @@ class _StudentDetailsState extends State<StudentDetails> {
     var imageUrl = '';
 
     return Scaffold(
+      appBar: AppBar(
+        title: const Text("Student Details"),
+        backgroundColor: Colors.blueAccent,
+      ),
       body: Center(
         child: SizedBox(
             width: cardWidth,

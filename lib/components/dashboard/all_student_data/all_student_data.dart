@@ -1,5 +1,7 @@
 import 'package:assignment_six/components/dashboard/profile/profile.dart';
 import 'package:assignment_six/components/dashboard/student_details/student_details.dart';
+import 'package:assignment_six/sql_database_dir/database/db_helper.dart';
+import 'package:assignment_six/sql_database_dir/model/student_model.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
@@ -13,7 +15,26 @@ class AllStudentData extends StatefulWidget {
 }
 
 class _AllStudentDataState extends State<AllStudentData> {
+  //declared variables
+  late DatabaseHelper dbHelper;
+  List<StudentModel> students = [];
+
   final products = List<String>.generate(100, (int index) => "Contact $index");
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    dbHelper = DatabaseHelper.instance;
+
+    //load notes on startup
+    loadAllStudents();
+  }
+
+//for loading data from db
+  Future<List<StudentModel>> loadAllStudents() async {
+    final data = await dbHelper.getAllStudentData();
+    return data.map((e) => StudentModel.fromMap(e)).toList();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -129,51 +150,39 @@ class _AllStudentDataState extends State<AllStudentData> {
                     fontSize: pageMenuTextSize, fontWeight: FontWeight.bold)),
             Divider(),
             Expanded(
-                child: GridView.count(
+              child: FutureBuilder<List<StudentModel>>(
+                future: loadAllStudents(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return Center(child: Text('No students found.'));
+                  }
+
+                  // If we have data, display it
+                  final studentList = snapshot.data!;
+                  return GridView.count(
                     crossAxisCount: totalCard,
                     crossAxisSpacing: 13,
-                    children: [
-                  studentCard(
-                    icon: Icons.person_pin_outlined,
-                    color: Colors.blueAccent,
-                    name: "Akram",
-                    id: "C221161",
-                    onTap: () {
-                      Get.to(AllStudentData());
-                    },
-                    context: context,
-                  ),
-                  studentCard(
-                    icon: Icons.person_add_alt,
-                    color: Colors.blueAccent,
-                    name: "Asif",
-                    id: "C221173",
-                    onTap: () {
-                      Get.to(AllStudentData());
-                    },
-                    context: context,
-                  ),
-                  studentCard(
-                    icon: Icons.person_search_outlined,
-                    color: Colors.blueAccent,
-                    name: "Iftee",
-                    id: "C221185",
-                    onTap: () {
-                      Get.to(AllStudentData());
-                    },
-                    context: context,
-                  ),
-                  studentCard(
-                    icon: Icons.person_remove_outlined,
-                    color: Colors.blueAccent,
-                    name: "Anay",
-                    id: "C221171",
-                    onTap: () {
-                      Get.to(AllStudentData());
-                    },
-                    context: context,
-                  ),
-                ])),
+                    children: List.generate(studentList.length, (index) {
+                      final student = studentList[index];
+                      return studentCard(
+                        icon: Icons.person,
+                        color: Colors.blueAccent,
+                        name: student.name ?? 'No Name',
+                        id: student.number ?? 'No ID',
+                        onTap: () {
+                          Get.to(StudentDetails(), arguments: student.id);
+                        },
+                        context: context,
+                      );
+                    }),
+                  );
+                },
+              ),
+            ),
           ],
         ),
       ),
@@ -196,8 +205,8 @@ Widget studentCard({
     onTap: onTap,
     child: Expanded(
       child: GestureDetector(
-        onTap: (){
-          Get.to(StudentDetails(),arguments: id);
+        onTap: () {
+          Get.to(StudentDetails(), arguments: id);
         },
         child: Container(
           margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
@@ -219,10 +228,8 @@ Widget studentCard({
                   height: 60,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: color
-                        .withOpacity(0.1),
-                    border: Border.all(
-                        color: color, width: 2),
+                    color: color.withOpacity(0.1),
+                    border: Border.all(color: color, width: 2),
                   ),
                   child: Center(
                     child: Icon(
@@ -232,7 +239,9 @@ Widget studentCard({
                     ),
                   ),
                 ),
-                SizedBox(height: 10,),
+                SizedBox(
+                  height: 10,
+                ),
                 Text(
                   name,
                   textAlign: TextAlign.center, // Center-align the text

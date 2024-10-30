@@ -74,6 +74,24 @@ class DatabaseHelper {
     //return notes;
   }
 
+  // For getting a single student's data by ID
+  Future<Map<String, dynamic>?> getStudentDataById(int id) async {
+    Database? db = await instance.database;
+
+    // Perform the query
+    List<Map<String, dynamic>> result = await db!.query(
+      tableNotes,
+      where: '$columnId = ?',
+      whereArgs: [id],
+    );
+
+    if (result.isNotEmpty) {
+      return result.first;
+    }
+    return null;
+  }
+
+
   //for insert data in database
   Future<int> insertData(Map<String, dynamic> row) async {
     Database? db = await instance.database;
