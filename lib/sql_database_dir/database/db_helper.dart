@@ -1,23 +1,31 @@
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
+
 class DatabaseHelper {
 
   //database name
-  static const databaseName = "notes.db";
+  static const databaseName = "student.db";
+
   //database version
   static const databaseVersion = 1;
+
   //table name
-  static const tableNotes = 'notes';
+  static const tableNotes = 'student';
+
   //column names
   static const columnId = 'id';
-  static const columnTitle = 'title';
-  static const columnDescription = 'description';
+  static const columnName = 'name';
+  static const columnNumber = 'number';
+  static const columnEmail = 'email';
+  static const columnLocation = 'location';
+
 
   //create a single instance of DatabaseHelper
   DatabaseHelper.privateConstructor();
   static final DatabaseHelper instance = DatabaseHelper.privateConstructor();
 
+  // Create a database object
   static Database? myDb;
 
 
@@ -31,6 +39,7 @@ class DatabaseHelper {
 
   //for initializing the database path
   initDatabase() async {
+    // find the path to the databases directory on the device
     String path = join(await getDatabasesPath(), databaseName);
     return await openDatabase(
         path,
@@ -42,29 +51,19 @@ class DatabaseHelper {
 
   //for creating table in database  if not exist already
   Future createTables(Database db, int version) async {
-
     await db.execute("""
           CREATE TABLE $tableNotes (
-            $columnId INTEGER PRIMARY KEY AUTOINCREMENT,
-            $columnTitle TEXT NOT NULL,
-            $columnDescription TEXT NOT NULL
+            $columnId INTEGER PRIMARY KEY,
+            $columnName TEXT NOT NULL,
+            $columnNumber TEXT NOT NULL,
+            $columnEmail TEXT NOT NULL,
+            $columnLocation TEXT NOT NULL
           )
           """);
-
-
-
-
-
   }
 
-  //for insert data
-  Future<int> insertData(Map<String, dynamic> row) async {
-    Database? db = await instance.database;
-    return await db!.insert(tableNotes, row);
-  }
-
-  //for read data from database
-  Future<List<Map<String, dynamic>>> getAllData() async {
+  //for get data from database
+  Future<List<Map<String, dynamic>>> getAllStudentData() async {
     Database? db = await instance.database;
 
     return await db!.query(tableNotes, orderBy: "$columnId DESC");
@@ -75,6 +74,11 @@ class DatabaseHelper {
     //return notes;
   }
 
+  //for insert data in database
+  Future<int> insertData(Map<String, dynamic> row) async {
+    Database? db = await instance.database;
+    return await db!.insert(tableNotes, row);
+  }
 
   //for update data in database
   Future<int> updateData(Map<String, dynamic> row,int id) async {

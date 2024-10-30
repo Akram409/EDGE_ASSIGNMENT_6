@@ -1,3 +1,5 @@
+import 'package:assignment_six/components/dashboard/all_student_data/all_student_data.dart';
+import 'package:assignment_six/components/dashboard/student_details/student_details.dart';
 import 'package:assignment_six/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -20,7 +22,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: false,
       ),
-      home: const HomePage(),
+      home: const StudentDetails(),
     );
   }
 }
