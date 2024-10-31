@@ -2,10 +2,12 @@
 
 This is a Student Management app built with Flutter. Below are some demo images of the app and a YouTube video demo.
 
-## Video Demo
+[//]: # (## Video Demo)
 
-You can also check out the video demo of the app on YouTube:  
-[Watch the demo on YouTube](https://youtu.be/9ujRmSGMcNc?si=Yzb01DxqTMTI0Iaq)
+[//]: # ()
+[//]: # (You can also check out the video demo of the app on YouTube:  )
+
+[//]: # ([Watch the demo on YouTube]&#40;https://youtu.be/9ujRmSGMcNc?si=Yzb01DxqTMTI0Iaq&#41;)
 
 
 ## Student Management App Demo
