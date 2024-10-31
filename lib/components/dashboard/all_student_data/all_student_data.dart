@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:assignment_six/components/dashboard/profile/profile.dart';
 import 'package:assignment_six/components/dashboard/student_details/student_details.dart';
 import 'package:assignment_six/sql_database_dir/database/db_helper.dart';
@@ -42,7 +44,7 @@ class _AllStudentDataState extends State<AllStudentData> {
     var totalCard = screenWidth > 600 ? 3 : 2;
     var mainIconSize = screenWidth > 600 ? 30.0 : 80.0;
     var secondaryIconSize = screenWidth > 600 ? 30.0 : 35.0;
-    var pageMenuTextSize = screenWidth > 600 ? 30.0 : 28.0;
+    var pageMenuTextSize = screenWidth > 600 ? 30.0 : 25.0;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blueAccent.shade400,
@@ -77,7 +79,7 @@ class _AllStudentDataState extends State<AllStudentData> {
                     children: List.generate(studentList.length, (index) {
                       final student = studentList[index];
                       return studentCard(
-                        icon: Icons.person,
+                        imagePath: student.imagePath ?? '',
                         color: Colors.blueAccent,
                         name: student.name ?? 'No Name',
                         id: student.id ?? 'No ID',
@@ -99,7 +101,7 @@ class _AllStudentDataState extends State<AllStudentData> {
 }
 
 Widget studentCard({
-  required IconData icon,
+  required String imagePath,
   required Color color,
   required String name,
   required String id,
@@ -110,16 +112,14 @@ Widget studentCard({
   var screenHeight = MediaQuery.sizeOf(context).height;
   var cardTextSize = screenWidth > 600 ? 30.0 : 17.0;
   var idTextSize = screenWidth > 600 ? 30.0 : 14.0;
-  var CricleWidth = screenWidth > 600 ? 70.0 : 100.0;
-  var CricleHeight = screenHeight > 600 ? 70.0 : 100.0;
+  var circleWidth = screenWidth > 600 ? 70.0 : 100.0;
+  var circleHeight = screenHeight > 600 ? 70.0 : 100.0;
+  var imageCircle = screenHeight > 600 ? 60.0 : 120.0;
 
   return Expanded(
     child: GestureDetector(
-      onTap: () {
-        Get.to(StudentDetails(), arguments: id);
-      },
+      onTap: onTap,
       child: Container(
-        // margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
         decoration: BoxDecoration(
           border: Border.all(color: color, width: 2),
           borderRadius: BorderRadius.circular(20),
@@ -134,27 +134,35 @@ Widget studentCard({
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
-                width: CricleWidth,
-                height: CricleHeight,
+                width: circleWidth,
+                height: circleHeight,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: color.withOpacity(0.1),
                   border: Border.all(color: color, width: 2),
                 ),
                 child: Center(
-                  child: Icon(
-                    icon,
-                    size: 40,
-                    color: color,
+                  child: ClipOval(
+                    child: imagePath.isNotEmpty && File(imagePath).existsSync()
+                        ? Image.file(
+                      File(imagePath),
+                      height: imageCircle,
+                      width: imageCircle,
+                      fit: BoxFit.cover,
+                    )
+                        : Image.asset(
+                      "assets/images/profile.png",
+                      height: imageCircle,
+                      width: imageCircle,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
               ),
-              SizedBox(
-                height: 5,
-              ),
+              SizedBox(height: 5),
               Text(
                 name,
-                textAlign: TextAlign.center, // Center-align the text
+                textAlign: TextAlign.center,
                 style: GoogleFonts.ebGaramond(
                   fontSize: cardTextSize,
                   fontWeight: FontWeight.w800,
@@ -162,13 +170,12 @@ Widget studentCard({
               ),
               Text(
                 id,
-                textAlign: TextAlign.center, // Center-align the text
+                textAlign: TextAlign.center,
                 style: GoogleFonts.ebGaramond(
                   fontSize: idTextSize,
                   fontWeight: FontWeight.w300,
                 ),
               ),
-
             ],
           ),
         ),

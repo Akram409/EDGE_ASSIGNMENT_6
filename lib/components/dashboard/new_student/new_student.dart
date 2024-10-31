@@ -117,8 +117,9 @@ class _NewStudentState extends State<NewStudent> {
       number: phoneController.text.toString(),
       email: emailController.text.toString(),
       location: locationController.text.toString(),
+      imagePath: photo?.path,
     );
-
+    print(newStudentModel.toMap());
     //if data insert successfully, its return row number which is greater that 1 always
     int check = await dbHelper.insertData(newStudentModel.toMap());
     print("Check=$check");

@@ -19,6 +19,7 @@ class DatabaseHelper {
   static const columnNumber = 'number';
   static const columnEmail = 'email';
   static const columnLocation = 'location';
+  static const columnImagePath = 'imagePath';
 
 
   //create a single instance of DatabaseHelper
@@ -52,15 +53,17 @@ class DatabaseHelper {
   //for creating table in database  if not exist already
   Future createTables(Database db, int version) async {
     await db.execute("""
-          CREATE TABLE $tableNotes (
-            $columnId TEXT PRIMARY KEY,
-            $columnName TEXT NOT NULL,
-            $columnNumber STRING NOT NULL,
-            $columnEmail TEXT NOT NULL,
-            $columnLocation TEXT NOT NULL
-          )
-          """);
+    CREATE TABLE $tableNotes (
+      $columnId TEXT PRIMARY KEY,
+      $columnName TEXT NOT NULL,
+      $columnNumber STRING NOT NULL,
+      $columnEmail TEXT NOT NULL,
+      $columnLocation TEXT NOT NULL,
+      $columnImagePath TEXT
+    )
+  """);
   }
+
 
   //for get data from database
   Future<List<Map<String, dynamic>>> getAllStudentData() async {

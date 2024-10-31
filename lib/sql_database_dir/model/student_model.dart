@@ -6,6 +6,7 @@ class StudentModel {
   final String? number;
   final String? email;
   final String? location;
+  final String? imagePath;
 
 
   // Create constructor to initialize the model class variables
@@ -15,7 +16,7 @@ class StudentModel {
     this.number,
     this.email,
     this.location,
-    // if you need to require fields then use this: required this.id, required this.title, required this.description;
+    this.imagePath,
   });
 
   //for saving data to db
@@ -29,6 +30,7 @@ class StudentModel {
       'number': number,
       'email': email,
       'location': location,
+      'imagePath': imagePath,
     };
   }
 
@@ -42,6 +44,7 @@ class StudentModel {
       number: map['number'].toString(),
       email: map['email'],
       location: map['location'],
+      imagePath: map['imagePath'],
     );
   }
 }

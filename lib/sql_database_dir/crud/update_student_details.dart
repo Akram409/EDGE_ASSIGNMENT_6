@@ -18,6 +18,9 @@ class UpdateStudentDetails extends StatefulWidget {
 class _UpdateStudentDetailsState extends State<UpdateStudentDetails> {
   Map<String, dynamic>? studentData;
   String studentID = Get.arguments;
+  late DatabaseHelper dbHelper;
+  File? photo;
+  final ImagePicker picker = ImagePicker();
 
   @override
   void initState() {
@@ -25,6 +28,7 @@ class _UpdateStudentDetailsState extends State<UpdateStudentDetails> {
     dbHelper = DatabaseHelper.instance;
     loadStudentData();
   }
+
   Future<void> loadStudentData() async {
     var data = await DatabaseHelper.instance.getStudentDataById(studentID);
     if (data != null) {
@@ -36,13 +40,13 @@ class _UpdateStudentDetailsState extends State<UpdateStudentDetails> {
         emailController.text = data['email'];
         locationController.text = data['location'];
         phoneController.text = data['number']?.toString() ?? '';
+
+        if (data['imagePath'] != null) {
+          photo = File(data['imagePath']);
+        }
       });
     }
   }
-
-  late DatabaseHelper dbHelper;
-  File? photo;
-  final ImagePicker picker = ImagePicker();
 
   // Controllers for TextFields
   final TextEditingController studentNameController = TextEditingController();
@@ -52,7 +56,7 @@ class _UpdateStudentDetailsState extends State<UpdateStudentDetails> {
   final TextEditingController sectionController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
 
-  // For camera
+// For camera
   Future<void> imgFromCamera() async {
     final pickedFile = await picker.pickImage(
       source: ImageSource.camera,
@@ -61,17 +65,16 @@ class _UpdateStudentDetailsState extends State<UpdateStudentDetails> {
       imageQuality: 100,
     );
 
-    if (pickedFile != null) {
-      File savedFile = await saveImageToLocalDirectory(pickedFile);
-      setState(() {
-        photo = savedFile; // Set the saved file as the selected photo
-      });
-    } else {
-      print('No image selected');
-    }
+    setState(() {
+      if (pickedFile != null) {
+        photo = File(pickedFile.path);
+      } else {
+        print('No image selected');
+      }
+    });
   }
 
-  // For gallery
+// For gallery
   Future<void> imgFromGallery() async {
     final pickedFile = await picker.pickImage(
       source: ImageSource.gallery,
@@ -80,23 +83,35 @@ class _UpdateStudentDetailsState extends State<UpdateStudentDetails> {
       imageQuality: 100,
     );
 
-    if (pickedFile != null) {
-      File savedFile = await saveImageToLocalDirectory(pickedFile);
-      setState(() {
-        photo = savedFile;
-      });
-    } else {
-      print('No image selected');
-    }
+    setState(() {
+      if (pickedFile != null) {
+        photo = File(pickedFile.path);
+      } else {
+        print('No image selected');
+      }
+    });
   }
 
-  // Save the selected image to the local directory
+// Save the selected image to the local directory and delete any previous image
   Future<File> saveImageToLocalDirectory(XFile pickedFile) async {
+    if (photo != null && await photo!.exists()) {
+      await photo!.delete();
+      print("Previous image deleted.");
+    }
+
     final directory = await getApplicationDocumentsDirectory();
     String newPath = '${directory.path}/${pickedFile.name}';
     final savedImage = await File(pickedFile.path).copy(newPath);
-    print('Image saved at: $newPath'); // Log the saved path
-    return savedImage; // Return the saved file
+    print('New image saved at: $newPath');
+
+    setState(() {
+      photo = savedImage;
+      if (studentData != null) {
+        studentData!['imagePath'] = newPath;
+      }
+    });
+
+    return savedImage;
   }
 
   void showPickerDialog(context) {
@@ -136,7 +151,9 @@ class _UpdateStudentDetailsState extends State<UpdateStudentDetails> {
         number: phoneController.text.toString(),
         email: emailController.text.toString(),
         location: locationController.text.toString(),
+        imagePath: photo?.path,
       );
+      print("Updated Student Data: $updatedStudentModel");
 
       int result = await dbHelper.updateData(
           updatedStudentModel.toMap(), updatedStudentModel.id!);
@@ -160,7 +177,6 @@ class _UpdateStudentDetailsState extends State<UpdateStudentDetails> {
           colorText: Colors.white);
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -221,13 +237,16 @@ class _UpdateStudentDetailsState extends State<UpdateStudentDetails> {
               ),
               _buildTextField("Student Name", studentNameController),
               SizedBox(height: textFiledGap),
-              _buildTextField("Student ID", studentIDController, enabled: false), // Disable this field
+              _buildTextField("Student ID", studentIDController,
+                  enabled: false), // Disable this field
               SizedBox(height: textFiledGap),
-              _buildTextField("Email", emailController, keyboardType: TextInputType.emailAddress),
+              _buildTextField("Email", emailController,
+                  keyboardType: TextInputType.emailAddress),
               SizedBox(height: textFiledGap),
               _buildTextField("Location", locationController),
               SizedBox(height: textFiledGap),
-              _buildTextField("Phone", phoneController, keyboardType: TextInputType.phone),
+              _buildTextField("Phone", phoneController,
+                  keyboardType: TextInputType.phone),
               const SizedBox(height: 20),
               // Submit Button
               SizedBox(

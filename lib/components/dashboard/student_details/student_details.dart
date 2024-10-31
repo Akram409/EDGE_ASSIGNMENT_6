@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:assignment_six/sql_database_dir/database/db_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -86,7 +88,8 @@ class _StudentDetailsState extends State<StudentDetails> {
               Align(
                 alignment: Alignment.topCenter,
                 child: Container(
-                  margin: const EdgeInsets.only(top: 100),
+                  padding: EdgeInsets.all(3),
+                  margin: const EdgeInsets.only(top: 95),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     border: Border.all(
@@ -95,7 +98,15 @@ class _StudentDetailsState extends State<StudentDetails> {
                     ),
                   ),
                   child: ClipOval(
-                    child: Image.asset(
+                    child: studentData?['imagePath'] != null &&
+                        File(studentData!['imagePath']).existsSync()
+                        ? Image.file(
+                      File(studentData!['imagePath']),
+                      height: 120,
+                      width: 120,
+                      fit: BoxFit.cover,
+                    )
+                        : Image.asset(
                       "assets/images/profile.png",
                       height: 120,
                       width: 120,

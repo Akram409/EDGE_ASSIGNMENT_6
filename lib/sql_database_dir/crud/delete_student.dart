@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:assignment_six/sql_database_dir/database/db_helper.dart';
@@ -63,7 +64,7 @@ class _DeleteStudentState extends State<DeleteStudent> {
     );
   }
 
-  Widget _buildLeadingImage() {
+  Widget _buildLeadingImage(String? imagePath) {
     return Container(
       margin: const EdgeInsets.only(right: 10), // Adjust margin as needed
       decoration: BoxDecoration(
@@ -74,8 +75,15 @@ class _DeleteStudentState extends State<DeleteStudent> {
         ),
       ),
       child: ClipOval(
-        child: Image.asset(
-          "assets/images/profile.png", // Path to your profile image
+        child: imagePath != null && imagePath.isNotEmpty
+            ? Image.file(
+          File(imagePath), // Use File to display image from path
+          height: 50, // Adjust size as needed
+          width: 50,
+          fit: BoxFit.cover,
+        )
+            : Image.asset(
+          "assets/images/profile.png", // Fallback image
           height: 50, // Adjust size as needed
           width: 50,
           fit: BoxFit.cover,
@@ -98,7 +106,7 @@ class _DeleteStudentState extends State<DeleteStudent> {
         itemBuilder: (context, index) {
           final student = students[index];
           return ListTile(
-            leading: _buildLeadingImage(),
+            leading: _buildLeadingImage(student.imagePath), // Pass the imagePath
             title: Text(student.name ?? 'No Name'),
             subtitle: Text('${student.id ?? 'No ID'}'),
             trailing: IconButton(
