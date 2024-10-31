@@ -1,16 +1,38 @@
-# assignment_six
+# EDGE IIUC Digital Skills Training Program | Mobile App Development
 
-A CRUD With Local Database Project
+This is a Student Management app built with Flutter. Below are some demo images of the app and a YouTube video demo.
 
-## Getting Started
+## Video Demo
 
-This project is a starting point for a Flutter application.
+You can also check out the video demo of the app on YouTube:  
+[Watch the demo on YouTube](https://youtu.be/9ujRmSGMcNc?si=Yzb01DxqTMTI0Iaq)
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## Student Management App Demo
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### Splash Section
+
+<div style="text-align: center;">
+  <img src="https://i.ibb.co.com/26StcsG/1.jpg" alt="Demo 2" width="400" height="645" />
+</div>
+
+### Gender Selection Section (Male & Female)
+
+<div style="text-align: center;">
+  <img src="https://i.ibb.co.com/mqH2RFT/2-1.jpg" alt="Demo 3" width="400" height="645" style="margin-right: 20px;" />
+  <img src="https://i.ibb.co.com/KWDqCCj/2-2.jpg" alt="Detail 1" width="400" height="645" />
+</div>
+
+### Weight & Height Selection Section (Male & Female)
+
+<div style="text-align: center;">
+  <img src="https://i.ibb.co.com/rcGK6FN/3-1.jpg" alt="Demo 4" width="400" height="645" style="margin-right: 20px;" />
+  <img src="https://i.ibb.co.com/Z2wrXLG/3-2.jpg" alt="Detail 2" width="400" height="645" />
+</div>
+
+### BMI Result Section (Male & Female)
+
+<div style="text-align: center;">
+  <img src="https://i.ibb.co.com/kQ3wWCL/4-1.jpg" alt="Demo 5" width="400" height="645" style="margin-right: 20px;" />
+  <img src="https://i.ibb.co.com/pzYf1F2/4-2.jpg" alt="Detail 3" width="400" height="645" />
+</div>

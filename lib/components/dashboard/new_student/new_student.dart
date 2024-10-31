@@ -204,8 +204,6 @@ class _NewStudentState extends State<NewStudent> {
               SizedBox(height: textFiledGap),
               _buildTextField("Location", locationController),
               SizedBox(height: textFiledGap),
-              _buildTextField("Section", sectionController),
-              SizedBox(height: textFiledGap),
               _buildTextField("Phone", phoneController,
                   keyboardType: TextInputType.phone),
 

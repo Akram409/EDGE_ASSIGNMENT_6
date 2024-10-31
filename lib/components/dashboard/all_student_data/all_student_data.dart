@@ -76,6 +76,7 @@ class _AllStudentDataState extends State<AllStudentData> {
                   return GridView.count(
                     crossAxisCount: totalCard,
                     crossAxisSpacing: 13,
+                    mainAxisSpacing: 13,
                     children: List.generate(studentList.length, (index) {
                       final student = studentList[index];
                       return studentCard(
