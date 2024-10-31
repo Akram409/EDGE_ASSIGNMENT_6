@@ -39,106 +39,14 @@ class _AllStudentDataState extends State<AllStudentData> {
   @override
   Widget build(BuildContext context) {
     var screenWidth = MediaQuery.sizeOf(context).width;
-    var totalCard = screenWidth > 600 ? 4 : 3;
+    var totalCard = screenWidth > 600 ? 3 : 2;
     var mainIconSize = screenWidth > 600 ? 30.0 : 80.0;
     var secondaryIconSize = screenWidth > 600 ? 30.0 : 35.0;
     var pageMenuTextSize = screenWidth > 600 ? 30.0 : 28.0;
-
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 150,
         backgroundColor: Colors.blueAccent.shade400,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(
-            bottom: Radius.circular(35),
-          ),
-        ),
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(
-                  Icons.account_circle_outlined,
-                  color: Colors.white,
-                  size: mainIconSize,
-                ),
-                SizedBox(
-                  width: 20,
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Students",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 30,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Row(
-                      children: [
-                        RichText(
-                          text: TextSpan(
-                            children: [
-                              TextSpan(
-                                text: "Class : ",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  // Color for the first part
-                                  fontWeight: FontWeight.w300,
-                                  fontSize: 15,
-                                ),
-                              ),
-                              TextSpan(
-                                text: "10 A - English",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w300,
-                                  fontSize: 15,
-                                ),
-                              ),
-                              TextSpan(
-                                text: " | ",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w300,
-                                  fontSize: 15,
-                                ),
-                              ),
-                              TextSpan(
-                                text: "Roll No : 31",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w300,
-                                  fontSize: 15,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    )
-                  ],
-                ),
-              ],
-            ),
-            GestureDetector(
-              onTap: () {
-                Get.to(Profile());
-              },
-              child: Icon(
-                Icons.edit_note_outlined,
-                color: Colors.white,
-                size: secondaryIconSize,
-              ),
-            ),
-          ],
-        ),
+        title: Text("Student Management"),
       ),
       body: Container(
         margin: EdgeInsets.fromLTRB(20, 40, 20, 0),
@@ -172,7 +80,7 @@ class _AllStudentDataState extends State<AllStudentData> {
                         icon: Icons.person,
                         color: Colors.blueAccent,
                         name: student.name ?? 'No Name',
-                        id: student.number ?? 'No ID',
+                        id: student.id ?? 'No ID',
                         onTap: () {
                           Get.to(StudentDetails(), arguments: student.id);
                         },
@@ -199,67 +107,69 @@ Widget studentCard({
   required BuildContext context,
 }) {
   var screenWidth = MediaQuery.sizeOf(context).width;
+  var screenHeight = MediaQuery.sizeOf(context).height;
   var cardTextSize = screenWidth > 600 ? 30.0 : 17.0;
   var idTextSize = screenWidth > 600 ? 30.0 : 14.0;
-  return GestureDetector(
-    onTap: onTap,
-    child: Expanded(
-      child: GestureDetector(
-        onTap: () {
-          Get.to(StudentDetails(), arguments: id);
-        },
-        child: Container(
-          margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
-          decoration: BoxDecoration(
-            border: Border.all(color: color, width: 2),
+  var CricleWidth = screenWidth > 600 ? 70.0 : 100.0;
+  var CricleHeight = screenHeight > 600 ? 70.0 : 100.0;
+
+  return Expanded(
+    child: GestureDetector(
+      onTap: () {
+        Get.to(StudentDetails(), arguments: id);
+      },
+      child: Container(
+        // margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
+        decoration: BoxDecoration(
+          border: Border.all(color: color, width: 2),
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Card(
+          elevation: 0,
+          shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
           ),
-          child: Card(
-            elevation: 0,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                  width: 60,
-                  height: 60,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: color.withOpacity(0.1),
-                    border: Border.all(color: color, width: 2),
-                  ),
-                  child: Center(
-                    child: Icon(
-                      icon,
-                      size: 40, // Icon size
-                      color: color,
-                    ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                width: CricleWidth,
+                height: CricleHeight,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: color.withOpacity(0.1),
+                  border: Border.all(color: color, width: 2),
+                ),
+                child: Center(
+                  child: Icon(
+                    icon,
+                    size: 40,
+                    color: color,
                   ),
                 ),
-                SizedBox(
-                  height: 10,
+              ),
+              SizedBox(
+                height: 5,
+              ),
+              Text(
+                name,
+                textAlign: TextAlign.center, // Center-align the text
+                style: GoogleFonts.ebGaramond(
+                  fontSize: cardTextSize,
+                  fontWeight: FontWeight.w800,
                 ),
-                Text(
-                  name,
-                  textAlign: TextAlign.center, // Center-align the text
-                  style: GoogleFonts.ebGaramond(
-                    fontSize: cardTextSize,
-                    fontWeight: FontWeight.w800,
-                  ),
+              ),
+              Text(
+                id,
+                textAlign: TextAlign.center, // Center-align the text
+                style: GoogleFonts.ebGaramond(
+                  fontSize: idTextSize,
+                  fontWeight: FontWeight.w300,
                 ),
-                Text(
-                  id,
-                  textAlign: TextAlign.center, // Center-align the text
-                  style: GoogleFonts.ebGaramond(
-                    fontSize: idTextSize,
-                    fontWeight: FontWeight.w300,
-                  ),
-                ),
-              ],
-            ),
+              ),
+
+            ],
           ),
         ),
       ),

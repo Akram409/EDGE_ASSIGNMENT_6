@@ -1,7 +1,7 @@
 import 'package:assignment_six/components/dashboard/all_student_data/all_student_data.dart';
 import 'package:assignment_six/components/dashboard/new_student/new_student.dart';
 import 'package:assignment_six/components/dashboard/profile/profile.dart';
-import 'package:assignment_six/sql_database_dir/crud/add_student.dart';
+import 'package:assignment_six/sql_database_dir/crud/delete_student.dart';
 import 'package:assignment_six/sql_database_dir/crud/update_student.dart';
 import 'package:assignment_six/sql_database_dir/model/student_model.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
@@ -46,7 +46,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   //for deleting a note
-  Future deleteNote(int id) async {
+  Future deleteNote(String id) async {
     int check = await dbHelper.deleteData(id);
     if (check > 0) {
       Fluttertoast.showToast(msg: "Student Data deleted successfully");
@@ -59,12 +59,14 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     var screenWidth = MediaQuery.sizeOf(context).width;
-    var mainIconSize = screenWidth > 600 ? 30.0 : 80.0;
+    var screenHeight = MediaQuery.sizeOf(context).height;
+    var mainIconSize = screenWidth > 600 ? 80.0 : 70.0;
     var secondaryIconSize = screenWidth > 600 ? 30.0 : 35.0;
-    var pageMenuTextSize = screenWidth > 600 ? 30.0 : 28.0;
+    var pageMenuTextSize = screenWidth > 600 ? 20.0 : 28.0;
+    var toolbarHeight = screenHeight > 800 ? 150.0 : 130.0;
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 150,
+        toolbarHeight: toolbarHeight,
         backgroundColor: Colors.blueAccent.shade400,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(
@@ -83,16 +85,16 @@ class _HomePageState extends State<HomePage> {
                   size: mainIconSize,
                 ),
                 SizedBox(
-                  width: 20,
+                  width: 5,
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Students",
+                      "Akram",
                       style: TextStyle(
                           color: Colors.white,
-                          fontSize: 30,
+                          fontSize: 25,
                           fontWeight: FontWeight.bold),
                     ),
                     SizedBox(
@@ -145,16 +147,16 @@ class _HomePageState extends State<HomePage> {
                 ),
               ],
             ),
-            GestureDetector(
-              onTap: (){
-                Get.to(Profile());
-              },
-              child: Icon(
-                Icons.edit_note_outlined,
-                color: Colors.white,
-                size: secondaryIconSize,
-              ),
-            ),
+            // GestureDetector(
+            //   onTap: (){
+            //     Get.to(Profile());
+            //   },
+            //   child: Icon(
+            //     Icons.edit_note_outlined,
+            //     color: Colors.white,
+            //     size: secondaryIconSize,
+            //   ),
+            // ),
           ],
         ),
       ),
@@ -198,7 +200,7 @@ class _HomePageState extends State<HomePage> {
                     color: Colors.yellowAccent,
                     text: "Update Student",
                     onTap: () {
-                      Get.to(AllStudentData());
+                      Get.to(UpdateStudents());
                     },
                     context: context,
                   ),
@@ -207,7 +209,7 @@ class _HomePageState extends State<HomePage> {
                     color: Colors.red,
                     text: "Delete Student",
                     onTap: () {
-                      Get.to(AllStudentData());
+                      Get.to(DeleteStudent());
                     },
                     context: context,
                   ),
@@ -230,23 +232,24 @@ Widget buildGridItem({
     onTap: onTap,
     child: Column(
       children: [
-        Container(
-          padding: const EdgeInsets.all(16.0),
-          height: 150,
-          width: MediaQuery.of(context).size.width/2,
-          decoration: BoxDecoration(
-            border: Border.all(width: 2, color: color),
-            borderRadius: BorderRadius.circular(20),
-            color: color
+        Expanded(
+          child: Container(
+            padding: const EdgeInsets.all(16.0),
+            width: MediaQuery.of(context).size.width/2,
+            decoration: BoxDecoration(
+              border: Border.all(width: 2, color: color),
+              borderRadius: BorderRadius.circular(20),
+              color: color
+            ),
+            child: Icon(icon, size: 45, color: Colors.white),
           ),
-          child: Icon(icon, size: 55, color: Colors.white),
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: 5),
         Text(
           text,
           style: GoogleFonts.ebGaramond(
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
+            fontSize: 15,
+            fontWeight: FontWeight.w500,
           ),
         ),
       ],

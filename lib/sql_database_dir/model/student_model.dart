@@ -7,6 +7,7 @@ class StudentModel {
   final String? email;
   final String? location;
 
+
   // Create constructor to initialize the model class variables
   StudentModel({
     this.id,
@@ -36,9 +37,9 @@ class StudentModel {
   //for retrieving data from db
   static StudentModel fromMap(Map<String, dynamic> map) {
     return StudentModel(
-      id: map['id'],
+      id: map['id'].toString(),
       name: map['name'],
-      number: map['number'],
+      number: map['number'].toString(),
       email: map['email'],
       location: map['location'],
     );

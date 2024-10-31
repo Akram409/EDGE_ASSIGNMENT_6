@@ -8,7 +8,7 @@ class DatabaseHelper {
   static const databaseName = "student.db";
 
   //database version
-  static const databaseVersion = 1;
+  static const databaseVersion = 2;
 
   //table name
   static const tableNotes = 'student';
@@ -53,9 +53,9 @@ class DatabaseHelper {
   Future createTables(Database db, int version) async {
     await db.execute("""
           CREATE TABLE $tableNotes (
-            $columnId INTEGER PRIMARY KEY,
+            $columnId TEXT PRIMARY KEY,
             $columnName TEXT NOT NULL,
-            $columnNumber TEXT NOT NULL,
+            $columnNumber STRING NOT NULL,
             $columnEmail TEXT NOT NULL,
             $columnLocation TEXT NOT NULL
           )
@@ -66,7 +66,7 @@ class DatabaseHelper {
   Future<List<Map<String, dynamic>>> getAllStudentData() async {
     Database? db = await instance.database;
 
-    return await db!.query(tableNotes, orderBy: "$columnId DESC");
+    return await db!.query(tableNotes, orderBy: "$columnId ASC");
 
     // Use rawQuery to select all notes
     // List<Map<String, dynamic>> notes = await db!.rawQuery('SELECT * FROM notes');
@@ -75,7 +75,7 @@ class DatabaseHelper {
   }
 
   // For getting a single student's data by ID
-  Future<Map<String, dynamic>?> getStudentDataById(int id) async {
+  Future<Map<String, dynamic>?> getStudentDataById(String id) async {
     Database? db = await instance.database;
 
     // Perform the query
@@ -99,7 +99,7 @@ class DatabaseHelper {
   }
 
   //for update data in database
-  Future<int> updateData(Map<String, dynamic> row,int id) async {
+  Future<int> updateData(Map<String, dynamic> row,String id) async {
     Database? db = await instance.database;
 
     return await db!
@@ -112,7 +112,7 @@ class DatabaseHelper {
   }
 
   //for delete data from database
-  Future<int> deleteData(int id) async {
+  Future<int> deleteData(String id) async {
     Database? db = await instance.database;
     return await db!
         .delete(tableNotes, where: '$columnId = ?', whereArgs: [id]);

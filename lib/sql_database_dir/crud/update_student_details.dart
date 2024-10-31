@@ -8,14 +8,38 @@ import 'package:path_provider/path_provider.dart';
 
 import '../../../sql_database_dir/database/db_helper.dart';
 
-class NewStudent extends StatefulWidget {
-  const NewStudent({super.key});
+class UpdateStudentDetails extends StatefulWidget {
+  const UpdateStudentDetails({super.key});
 
   @override
-  State<NewStudent> createState() => _NewStudentState();
+  State<UpdateStudentDetails> createState() => _UpdateStudentDetailsState();
 }
 
-class _NewStudentState extends State<NewStudent> {
+class _UpdateStudentDetailsState extends State<UpdateStudentDetails> {
+  Map<String, dynamic>? studentData;
+  String studentID = Get.arguments;
+
+  @override
+  void initState() {
+    super.initState();
+    dbHelper = DatabaseHelper.instance;
+    loadStudentData();
+  }
+  Future<void> loadStudentData() async {
+    var data = await DatabaseHelper.instance.getStudentDataById(studentID);
+    if (data != null) {
+      setState(() {
+        studentData = data;
+        // Set the text fields with the current student data
+        studentNameController.text = data['name'];
+        studentIDController.text = data['id'];
+        emailController.text = data['email'];
+        locationController.text = data['location'];
+        phoneController.text = data['number']?.toString() ?? '';
+      });
+    }
+  }
+
   late DatabaseHelper dbHelper;
   File? photo;
   final ImagePicker picker = ImagePicker();
@@ -28,7 +52,7 @@ class _NewStudentState extends State<NewStudent> {
   final TextEditingController sectionController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
 
-  // for camera
+  // For camera
   Future<void> imgFromCamera() async {
     final pickedFile = await picker.pickImage(
       source: ImageSource.camera,
@@ -47,7 +71,7 @@ class _NewStudentState extends State<NewStudent> {
     }
   }
 
-  // for gallery
+  // For gallery
   Future<void> imgFromGallery() async {
     final pickedFile = await picker.pickImage(
       source: ImageSource.gallery,
@@ -68,15 +92,9 @@ class _NewStudentState extends State<NewStudent> {
 
   // Save the selected image to the local directory
   Future<File> saveImageToLocalDirectory(XFile pickedFile) async {
-    // Get the application documents directory
     final directory = await getApplicationDocumentsDirectory();
-
-    // Create a new path for the image file
     String newPath = '${directory.path}/${pickedFile.name}';
-
-    // Copy the image from its original path to the new path
     final savedImage = await File(pickedFile.path).copy(newPath);
-
     print('Image saved at: $newPath'); // Log the saved path
     return savedImage; // Return the saved file
   }
@@ -109,41 +127,48 @@ class _NewStudentState extends State<NewStudent> {
         });
   }
 
-  //add student to database
-  Future addStudent() async {
-    final newStudentModel = StudentModel(
-      id: studentIDController.text.toString(),
-      name: studentNameController.text.toString(),
-      number: phoneController.text.toString(),
-      email: emailController.text.toString(),
-      location: locationController.text.toString(),
-    );
+  // Update student details in the database
+  Future<void> updateStudent() async {
+    try {
+      final updatedStudentModel = StudentModel(
+        id: studentIDController.text.toString(),
+        name: studentNameController.text.toString(),
+        number: phoneController.text.toString(),
+        email: emailController.text.toString(),
+        location: locationController.text.toString(),
+      );
 
-    //if data insert successfully, its return row number which is greater that 1 always
-    int check = await dbHelper.insertData(newStudentModel.toMap());
-    print("Check=$check");
-    if (check > 0) {
-      Get.snackbar("Success", "Student Data Added",
-          snackPosition: SnackPosition.TOP);
-      Get.offAll(HomePage());
-    } else {
-      Get.snackbar("Error", "Error in adding Student Data",
-          snackPosition: SnackPosition.TOP);
+      int result = await dbHelper.updateData(
+          updatedStudentModel.toMap(), updatedStudentModel.id!);
+
+      if (result > 0) {
+        Get.snackbar("Success", "Student Data Updated",
+            snackPosition: SnackPosition.TOP,
+            backgroundColor: Colors.green,
+            colorText: Colors.white);
+        Get.offAll(HomePage());
+      } else {
+        Get.snackbar("Error", "Error in updating Student Data",
+            snackPosition: SnackPosition.TOP,
+            backgroundColor: Colors.red,
+            colorText: Colors.white);
+      }
+    } catch (e) {
+      Get.snackbar("Error", e.toString(),
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: Colors.red,
+          colorText: Colors.white);
     }
   }
 
-  @override
-  void initState() {
-    super.initState();
-    dbHelper = DatabaseHelper.instance;
-  }
 
   @override
   Widget build(BuildContext context) {
+    print("Retrieved Student Data: $studentData");
     var textFiledGap = 13.0;
     return Scaffold(
         appBar: AppBar(
-          title: Center(child: const Text("New Student")),
+          title: Center(child: const Text("Update Student")),
           backgroundColor: Colors.blueAccent,
         ),
         body: SingleChildScrollView(
@@ -196,20 +221,14 @@ class _NewStudentState extends State<NewStudent> {
               ),
               _buildTextField("Student Name", studentNameController),
               SizedBox(height: textFiledGap),
-              _buildTextField("Student ID", studentIDController),
+              _buildTextField("Student ID", studentIDController, enabled: false), // Disable this field
               SizedBox(height: textFiledGap),
-              _buildTextField("Email", emailController,
-                  keyboardType: TextInputType.emailAddress),
+              _buildTextField("Email", emailController, keyboardType: TextInputType.emailAddress),
               SizedBox(height: textFiledGap),
               _buildTextField("Location", locationController),
               SizedBox(height: textFiledGap),
-              _buildTextField("Section", sectionController),
-              SizedBox(height: textFiledGap),
-              _buildTextField("Phone", phoneController,
-                  keyboardType: TextInputType.phone),
-
+              _buildTextField("Phone", phoneController, keyboardType: TextInputType.phone),
               const SizedBox(height: 20),
-
               // Submit Button
               SizedBox(
                 height: 50,
@@ -232,18 +251,14 @@ class _NewStudentState extends State<NewStudent> {
                         horizontal: 20, vertical: 15), // Spacing
                   ),
                   onPressed: () async {
-                    // print("Student Name: ${studentNameController.text}");
-                    // print("Student ID: ${studentIDController.text}");
-                    // print("Email: ${emailController.text}");
-                    // print("Location: ${locationController.text}");
-                    // print("Section: ${sectionController.text}");
-                    // print("Phone: ${phoneController.text}");
-                    addStudent();
+                    updateStudent(); // Call the update method instead
                   },
-                  child: const Text("Submit"),
+                  child: const Text("Update"),
                 ),
               ),
-              SizedBox(height: 20,),
+              SizedBox(
+                height: 20,
+              ),
             ],
           ),
         ));
@@ -251,13 +266,15 @@ class _NewStudentState extends State<NewStudent> {
 }
 
 // Reusable method to build TextFields
+// Reusable method to build TextFields
 Widget _buildTextField(String label, TextEditingController controller,
-    {TextInputType keyboardType = TextInputType.text}) {
+    {TextInputType keyboardType = TextInputType.text, bool enabled = true}) {
   return Padding(
     padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
     child: TextField(
       controller: controller,
       keyboardType: keyboardType,
+      enabled: enabled, // Set enabled property based on the parameter
       decoration: InputDecoration(
         focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(color: Colors.blueAccent, width: 2),
