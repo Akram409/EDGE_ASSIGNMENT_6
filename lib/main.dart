@@ -1,6 +1,7 @@
 import 'package:assignment_six/components/dashboard/all_student_data/all_student_data.dart';
 import 'package:assignment_six/components/dashboard/new_student/new_student.dart';
 import 'package:assignment_six/components/dashboard/student_details/student_details.dart';
+import 'package:assignment_six/components/share/splash/splash.dart';
 import 'package:assignment_six/home_page.dart';
 import 'package:assignment_six/sql_database_dir/crud/update_student.dart';
 import 'package:flutter/material.dart';
@@ -16,12 +17,6 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    var students = {
-      "id" : "c221161",
-      "name" : "Akram",
-      "number" : "234234",
-      "email" : "temp@gmail.com",
-    };
     return GetMaterialApp(
       title: 'BMI Calculator',
       debugShowCheckedModeBanner: false,
@@ -30,7 +25,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: false,
       ),
-      home: HomePage(),
+      home: Splash(),
     );
   }
 }

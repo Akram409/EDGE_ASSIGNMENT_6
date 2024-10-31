@@ -1,13 +1,10 @@
 import 'package:assignment_six/components/dashboard/all_student_data/all_student_data.dart';
 import 'package:assignment_six/components/dashboard/new_student/new_student.dart';
-import 'package:assignment_six/components/dashboard/profile/profile.dart';
 import 'package:assignment_six/sql_database_dir/crud/delete_student.dart';
 import 'package:assignment_six/sql_database_dir/crud/update_student.dart';
 import 'package:assignment_six/sql_database_dir/model/student_model.dart';
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:assignment_six/sql_database_dir/database/db_helper.dart';
@@ -70,28 +67,36 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: Colors.blueAccent.shade400,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(
-            bottom: Radius.circular(35),
+            bottom: Radius.circular(37),
           ),
         ),
         title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Row(
               children: [
-                Icon(
-                  Icons.account_circle_outlined,
-                  color: Colors.white,
-                  size: mainIconSize,
+                Container(
+                  padding: EdgeInsets.all(3),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(width: 2, color: Colors.white),
+                    // borderRadius: BorderRadius.circular(10)
+                  ),
+                  child: Image.asset(
+                    "assets/images/profile.png",
+                    height: 50,
+                    width: 50,
+                    fit: BoxFit.cover,
+                  ),
                 ),
                 SizedBox(
-                  width: 5,
+                  width: 15,
                 ),
                 Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      "Akram",
+                      "Welcome!",
                       style: TextStyle(
                           color: Colors.white,
                           fontSize: 25,
@@ -106,32 +111,7 @@ class _HomePageState extends State<HomePage> {
                           text: TextSpan(
                             children: [
                               TextSpan(
-                                text: "Class : ",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  // Color for the first part
-                                  fontWeight: FontWeight.w300,
-                                  fontSize: 15,
-                                ),
-                              ),
-                              TextSpan(
-                                text: "10 A - English",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w300,
-                                  fontSize: 15,
-                                ),
-                              ),
-                              TextSpan(
-                                text: " | ",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w300,
-                                  fontSize: 15,
-                                ),
-                              ),
-                              TextSpan(
-                                text: "Roll No : 31",
+                                text: "Akram Hossain",
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.w300,
@@ -166,7 +146,8 @@ class _HomePageState extends State<HomePage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text("Dashboard",
-                style: TextStyle(fontSize: pageMenuTextSize, fontWeight: FontWeight.bold)),
+                style: TextStyle(
+                    fontSize: pageMenuTextSize, fontWeight: FontWeight.bold)),
             Divider(),
             SizedBox(
               height: 10,
@@ -197,7 +178,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                   buildGridItem(
                     icon: Icons.person_search_outlined,
-                    color: Colors.yellowAccent,
+                    color: Colors.blueGrey,
                     text: "Update Student",
                     onTap: () {
                       Get.to(UpdateStudents());
@@ -213,7 +194,7 @@ class _HomePageState extends State<HomePage> {
                     },
                     context: context,
                   ),
-                ]))
+                ])),
           ],
         ),
       ),
@@ -235,12 +216,11 @@ Widget buildGridItem({
         Expanded(
           child: Container(
             padding: const EdgeInsets.all(16.0),
-            width: MediaQuery.of(context).size.width/2,
+            width: MediaQuery.of(context).size.width / 2,
             decoration: BoxDecoration(
-              border: Border.all(width: 2, color: color),
-              borderRadius: BorderRadius.circular(20),
-              color: color
-            ),
+                border: Border.all(width: 2, color: color),
+                borderRadius: BorderRadius.circular(20),
+                color: color),
             child: Icon(icon, size: 45, color: Colors.white),
           ),
         ),
