@@ -1,11 +1,8 @@
 import 'dart:io';
-
-import 'package:assignment_six/components/dashboard/profile/profile.dart';
 import 'package:assignment_six/components/dashboard/student_details/student_details.dart';
 import 'package:assignment_six/sql_database_dir/database/db_helper.dart';
 import 'package:assignment_six/sql_database_dir/model/student_model.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
