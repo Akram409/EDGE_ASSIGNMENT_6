@@ -12,7 +12,7 @@ class Splash extends StatefulWidget {
 
 class _SplashState extends State<Splash> {
   startTimer() async {
-    Timer(const Duration(seconds: 3), () {
+    Timer(const Duration(seconds: 5), () {
       // Code
       Get.offAll(HomePage());
     });
